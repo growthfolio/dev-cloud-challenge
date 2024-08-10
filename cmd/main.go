@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/FelipeAJdev/dev-cloud-challenge/internal/handlers"
@@ -13,35 +12,68 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
+	logrus "github.com/sirupsen/logrus"
 )
 
-func runMigrations(databaseURL string) {
+// @title API de Gestão de Alunos
+// @version 1.0
+// @description Esta é a documentação da API de Gestão de Alunos.
+
+// @contact.name Felipe Macedo
+// @contact.email felipealexandrej@gmail.com
+
+// @host localhost:8080
+// @BasePath /
+// @schemes http
+
+func initLogger() *logrus.Logger {
+	log := logrus.New()
+	log.SetFormatter(&logrus.JSONFormatter{})
+	log.SetLevel(logrus.InfoLevel)
+	return log
+}
+
+func runMigrations(databaseURL string, log *logrus.Logger) {
 	m, err := migrate.New(
 		"file://./internal/store/pgstore/migrations",
 		databaseURL)
 	if err != nil {
-		log.Fatalf("Falha ao criar a instância de migrate: %v", err)
+		log.WithFields(logrus.Fields{
+			"error": err,
+			"url":   databaseURL,
+		}).Fatal("Falha ao criar a instância de migrate")
 	}
 
 	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
-		log.Fatalf("Falha ao aplicar migrations: %v", err)
+		log.WithFields(logrus.Fields{
+			"error": err,
+		}).Fatal("Falha ao aplicar migrations")
 	}
 
-	log.Println("Migrations aplicadas com sucesso!")
+	log.Info("Migrations aplicadas com sucesso!")
 }
 
 func main() {
+	log := initLogger()
 
 	if err := godotenv.Load(); err != nil {
-		log.Fatalf("Erro ao carregar arquivo .env: %v", err)
+		log.WithFields(logrus.Fields{
+			"error": err,
+		}).Fatal("Erro ao carregar arquivo .env")
 	}
 
 	database := pgstore.InitDB()
-	defer database.Close()
+	defer func() {
+		if err := database.Close(); err != nil {
+			log.WithFields(logrus.Fields{
+				"error": err,
+			}).Error("Erro ao fechar a conexão com o banco de dados")
+		}
+	}()
 
 	databaseURL := "postgres://postgres:123456789@localhost:5432/wsrs?sslmode=disable"
 
-	runMigrations(databaseURL)
+	runMigrations(databaseURL, log)
 
 	alunoRepository := repository.NewAlunoRepository(database)
 	alunoService := services.NewAlunoService(alunoRepository)
@@ -55,6 +87,10 @@ func main() {
 	router.HandleFunc("/alunos/{id}", alunoHandler.UpdateAluno).Methods("PUT")
 	router.HandleFunc("/alunos/{id}", alunoHandler.DeleteAluno).Methods("DELETE")
 
-	log.Println("Servidor rodando na porta 8080")
-	log.Fatal(http.ListenAndServe(":8080", router))
+	log.Info("Servidor rodando na porta 8080")
+	if err := http.ListenAndServe(":8080", router); err != nil {
+		log.WithFields(logrus.Fields{
+			"error": err,
+		}).Fatal("Erro ao iniciar o servidor HTTP")
+	}
 }
