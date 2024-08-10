@@ -8,11 +8,11 @@ import (
 	"github.com/FelipeAJdev/dev-cloud-challenge/internal/repository"
 	"github.com/FelipeAJdev/dev-cloud-challenge/internal/services"
 	"github.com/FelipeAJdev/dev-cloud-challenge/internal/store/pgstore"
-
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 )
 
 func runMigrations(databaseURL string) {
@@ -31,17 +31,18 @@ func runMigrations(databaseURL string) {
 }
 
 func main() {
-	// Conectar ao banco de dados
+
+	if err := godotenv.Load(); err != nil {
+		log.Fatalf("Erro ao carregar arquivo .env: %v", err)
+	}
+
 	database := pgstore.InitDB()
 	defer database.Close()
 
-	// Construir a string de conexão
 	databaseURL := "postgres://postgres:123456789@localhost:5432/wsrs?sslmode=disable"
 
-	// Rodar migrations
 	runMigrations(databaseURL)
 
-	// Configuração do Repositório, Serviço e Handlers
 	alunoRepository := repository.NewAlunoRepository(database)
 	alunoService := services.NewAlunoService(alunoRepository)
 	alunoHandler := handlers.NewAlunoHandler(alunoService)
