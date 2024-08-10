@@ -2,7 +2,9 @@ package main
 
 import (
 	"net/http"
+	"os"
 
+	_ "github.com/FelipeAJdev/dev-cloud-challenge/docs" // Importa os documentos gerados pelo swagger
 	"github.com/FelipeAJdev/dev-cloud-challenge/internal/handlers"
 	"github.com/FelipeAJdev/dev-cloud-challenge/internal/repository"
 	"github.com/FelipeAJdev/dev-cloud-challenge/internal/services"
@@ -13,6 +15,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 	logrus "github.com/sirupsen/logrus"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 // @title API de Gestão de Alunos
@@ -25,6 +28,54 @@ import (
 // @host localhost:8080
 // @BasePath /
 // @schemes http
+func main() {
+	log := initLogger()
+
+	if err := godotenv.Load("../.env"); err != nil {
+		log.WithFields(logrus.Fields{
+			"error": err,
+		}).Fatal("Erro ao carregar arquivo .env")
+	}
+
+	database := pgstore.InitDB()
+	defer func() {
+		if err := database.Close(); err != nil {
+			log.WithFields(logrus.Fields{
+				"error": err,
+			}).Error("Erro ao fechar a conexão com o banco de dados")
+		} else {
+			log.Info("Conexão com o banco de dados fechada com sucesso")
+		}
+	}()
+
+	databaseURL := os.Getenv("DATABASE_URL")
+	if databaseURL == "" {
+		log.Fatal("DATABASE_URL is not set in the environment")
+	}
+
+	runMigrations(databaseURL, log)
+
+	alunoRepository := repository.NewAlunoRepository(database)
+	alunoService := services.NewAlunoService(alunoRepository)
+	alunoHandler := handlers.NewAlunoHandler(alunoService, log)
+
+	router := mux.NewRouter()
+
+	router.HandleFunc("/alunos", alunoHandler.GetAlunos).Methods("GET")
+	router.HandleFunc("/alunos", alunoHandler.CreateAluno).Methods("POST")
+	router.HandleFunc("/alunos/{id}", alunoHandler.GetAluno).Methods("GET")
+	router.HandleFunc("/alunos/{id}", alunoHandler.UpdateAluno).Methods("PUT")
+	router.HandleFunc("/alunos/{id}", alunoHandler.DeleteAluno).Methods("DELETE")
+
+	router.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
+
+	log.Info("Servidor rodando na porta 8080")
+	if err := http.ListenAndServe(":8080", router); err != nil {
+		log.WithFields(logrus.Fields{
+			"error": err,
+		}).Fatal("Erro ao iniciar o servidor HTTP")
+	}
+}
 
 func initLogger() *logrus.Logger {
 	log := logrus.New()
@@ -35,7 +86,7 @@ func initLogger() *logrus.Logger {
 
 func runMigrations(databaseURL string, log *logrus.Logger) {
 	m, err := migrate.New(
-		"file://./internal/store/pgstore/migrations",
+		"file://../internal/store/pgstore/migrations",
 		databaseURL)
 	if err != nil {
 		log.WithFields(logrus.Fields{
@@ -51,46 +102,4 @@ func runMigrations(databaseURL string, log *logrus.Logger) {
 	}
 
 	log.Info("Migrations aplicadas com sucesso!")
-}
-
-func main() {
-	log := initLogger()
-
-	if err := godotenv.Load(); err != nil {
-		log.WithFields(logrus.Fields{
-			"error": err,
-		}).Fatal("Erro ao carregar arquivo .env")
-	}
-
-	database := pgstore.InitDB()
-	defer func() {
-		if err := database.Close(); err != nil {
-			log.WithFields(logrus.Fields{
-				"error": err,
-			}).Error("Erro ao fechar a conexão com o banco de dados")
-		}
-	}()
-
-	databaseURL := "postgres://postgres:123456789@localhost:5432/wsrs?sslmode=disable"
-
-	runMigrations(databaseURL, log)
-
-	alunoRepository := repository.NewAlunoRepository(database)
-	alunoService := services.NewAlunoService(alunoRepository)
-	alunoHandler := handlers.NewAlunoHandler(alunoService)
-
-	router := mux.NewRouter()
-
-	router.HandleFunc("/alunos", alunoHandler.GetAlunos).Methods("GET")
-	router.HandleFunc("/alunos", alunoHandler.CreateAluno).Methods("POST")
-	router.HandleFunc("/alunos/{id}", alunoHandler.GetAluno).Methods("GET")
-	router.HandleFunc("/alunos/{id}", alunoHandler.UpdateAluno).Methods("PUT")
-	router.HandleFunc("/alunos/{id}", alunoHandler.DeleteAluno).Methods("DELETE")
-
-	log.Info("Servidor rodando na porta 8080")
-	if err := http.ListenAndServe(":8080", router); err != nil {
-		log.WithFields(logrus.Fields{
-			"error": err,
-		}).Fatal("Erro ao iniciar o servidor HTTP")
-	}
 }
