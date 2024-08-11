@@ -33,7 +33,7 @@ func main() {
 
 	// Carrega o .env apenas se não estiver em produção
 	if os.Getenv("ENV") != "PRODUCTION" {
-		if err := godotenv.Load(); err != nil {
+		if err := godotenv.Load(".env"); err != nil {
 			log.WithFields(logrus.Fields{
 				"error": err,
 			}).Fatal("Erro ao carregar arquivo .env")

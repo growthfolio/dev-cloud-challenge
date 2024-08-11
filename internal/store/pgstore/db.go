@@ -17,7 +17,7 @@ func InitDB() *sql.DB {
 	dbHost := os.Getenv("WSRS_DATABASE_HOST")
 	dbPort := os.Getenv("WSRS_DATABASE_PORT")
 
-	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=require",
 		dbHost, dbPort, dbUser, dbPassword, dbName)
 
 	db, err := sql.Open("postgres", connStr)

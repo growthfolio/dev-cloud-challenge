@@ -1,1 +1,1 @@
-web: ./main
+web: ./bin/dev-cloud-challenge
