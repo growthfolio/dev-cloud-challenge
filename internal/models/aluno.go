@@ -1,5 +1,10 @@
 package models
 
+type ErrorResponse struct {
+	Message string `json:"message"`
+	Code    int    `json:"code"`
+}
+
 type Aluno struct {
 	ID                   int     `json:"id"`
 	Nome                 string  `json:"nome"`

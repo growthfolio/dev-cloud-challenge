@@ -1,0 +1,185 @@
+basePath: /
+definitions:
+  models.Aluno:
+    properties:
+      id:
+        type: integer
+      idade:
+        type: integer
+      nome:
+        type: string
+      nome_professor:
+        type: string
+      nota_primeiro_semestre:
+        type: number
+      nota_segundo_semestre:
+        type: number
+      numero_sala:
+        type: integer
+    type: object
+  models.ErrorResponse:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: felipealexandrej@gmail.com
+    name: Felipe Macedo
+  description: Esta é a documentação da API de Gestão de Alunos.
+  title: API de Gestão de Alunos
+  version: "1.0"
+paths:
+  /alunos:
+    get:
+      consumes:
+      - application/json
+      description: Obtém a lista de TODOS os alunos cadastrados no sistema
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Aluno'
+            type: array
+        "500":
+          description: Erro interno no servidor
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Retorna a lista de alunos
+      tags:
+      - Alunos
+    post:
+      consumes:
+      - application/json
+      description: Adiciona um novo aluno ao sistema
+      parameters:
+      - description: Dados do Aluno
+        in: body
+        name: aluno
+        required: true
+        schema:
+          $ref: '#/definitions/models.Aluno'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Aluno'
+        "400":
+          description: Dados do aluno inválidos
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Erro interno no servidor
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Cria um novo aluno
+      tags:
+      - Alunos
+  /alunos/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Remove um aluno específico pelo ID
+      parameters:
+      - description: ID do Aluno
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Aluno não encontrado
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Erro interno no servidor
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Deleta um aluno pelo ID
+      tags:
+      - Alunos
+    get:
+      consumes:
+      - application/json
+      description: Obtém os dados de um aluno específico pelo ID
+      parameters:
+      - description: ID do Aluno
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Dados do Aluno
+          schema:
+            $ref: '#/definitions/models.Aluno'
+        "400":
+          description: ID inválido
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Aluno não encontrado
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Erro interno no servidor
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Retorna um aluno pelo ID
+      tags:
+      - Alunos
+    put:
+      consumes:
+      - application/json
+      description: Atualiza as informações de um aluno específico pelo ID
+      parameters:
+      - description: ID do Aluno
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Dados do Aluno
+        in: body
+        name: aluno
+        required: true
+        schema:
+          $ref: '#/definitions/models.Aluno'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Aluno'
+        "400":
+          description: Dados inválidos ou ID inválido
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Aluno não encontrado
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Erro interno no servidor
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Atualiza os dados de um aluno
+      tags:
+      - Alunos
+schemes:
+- http
+swagger: "2.0"
