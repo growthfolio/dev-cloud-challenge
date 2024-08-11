@@ -30,7 +30,7 @@ info:
     name: Felipe Macedo
   description: Esta é a documentação da API de Gestão de Alunos.
   title: API de Gestão de Alunos
-  version: "1.0"
+  version: "2.0"
 paths:
   /alunos:
     get:
@@ -180,5 +180,5 @@ paths:
       tags:
       - Alunos
 schemes:
-- http
+- https
 swagger: "2.0"

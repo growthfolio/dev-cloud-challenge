@@ -1,6 +1,6 @@
 {
     "schemes": [
-        "http"
+        "https"
     ],
     "swagger": "2.0",
     "info": {
@@ -10,7 +10,7 @@
             "name": "Felipe Macedo",
             "email": "felipealexandrej@gmail.com"
         },
-        "version": "1.0"
+        "version": "2.0"
     },
     "basePath": "/",
     "paths": {

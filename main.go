@@ -20,14 +20,14 @@ import (
 )
 
 // @title API de Gestão de Alunos
-// @version 1.0
+// @version 2.0
 // @description Esta é a documentação da API de Gestão de Alunos.
 
 // @contact.name Felipe Macedo
 // @contact.email felipealexandrej@gmail.com
 
 // @BasePath /
-// @schemes http
+// @schemes https
 func main() {
 	log := initLogger()
 
