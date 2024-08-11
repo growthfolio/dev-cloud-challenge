@@ -289,7 +289,7 @@ var SwaggerInfo = &swag.Spec{
 	BasePath:         "/",
 	Schemes:          []string{"https"},
 	Title:            "API de Gestão de Alunos",
-    Description:      "Esta é a documentação da API de Gestão de Alunos.\n\n[LinkedIn](https://www.linkedin.com/in/seu-perfil-linkedin)\n[GitHub](https://github.com/seu-usuario-github)",
+    Description:      "Esta é a documentação da API de Gestão de Alunos.\n\n[LinkedIn](https://www.linkedin.com/in/felipemacedo1/)\n[GitHub](https://github.com/FelipeAJdev/)",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",
