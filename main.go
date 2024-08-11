@@ -5,6 +5,7 @@ import (
 	"os"
 
 	_ "github.com/FelipeAJdev/dev-cloud-challenge/docs" // Importa os documentos gerados pelo swagger
+	// Ajuste: Importa o pacote de documentação gerada
 	"github.com/FelipeAJdev/dev-cloud-challenge/internal/handlers"
 	"github.com/FelipeAJdev/dev-cloud-challenge/internal/repository"
 	"github.com/FelipeAJdev/dev-cloud-challenge/internal/services"
@@ -25,9 +26,8 @@ import (
 // @contact.name Felipe Macedo
 // @contact.email felipealexandrej@gmail.com
 
-// @host dev-cloud-challenge-b3f5485f2dcf.herokuapp.com
 // @BasePath /
-// @schemes https
+// @schemes http
 func main() {
 	log := initLogger()
 
@@ -37,6 +37,11 @@ func main() {
 		if err != nil {
 			log.Fatalf("Erro ao carregar arquivo .env: %v", err)
 		}
+	}
+
+	host := os.Getenv("HOST")
+	if host == "" {
+		host = "dev-cloud-challenge-b3f5485f2dcf.herokuapp.com" // Host padrão para produção
 	}
 
 	database := pgstore.InitDB()
@@ -62,21 +67,6 @@ func main() {
 	alunoHandler := handlers.NewAlunoHandler(alunoService, log)
 
 	router := mux.NewRouter()
-
-	// Configura o CORS Middleware
-	router.Use(mux.CORSMethodMiddleware(router))
-	router.Use(func(next http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Set("Access-Control-Allow-Origin", "*") // Permite todas as origens, altere conforme necessário
-			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-			w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
-			if r.Method == "OPTIONS" {
-				w.WriteHeader(http.StatusOK)
-				return
-			}
-			next.ServeHTTP(w, r)
-		})
-	})
 
 	// Redireciona a rota raiz para o Swagger
 	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
