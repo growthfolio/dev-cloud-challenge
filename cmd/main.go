@@ -31,10 +31,13 @@ import (
 func main() {
 	log := initLogger()
 
-	if err := godotenv.Load("../.env"); err != nil {
-		log.WithFields(logrus.Fields{
-			"error": err,
-		}).Fatal("Erro ao carregar arquivo .env")
+	// Carrega o .env apenas se não estiver em produção
+	if os.Getenv("ENV") != "PRODUCTION" {
+		if err := godotenv.Load(); err != nil {
+			log.WithFields(logrus.Fields{
+				"error": err,
+			}).Fatal("Erro ao carregar arquivo .env")
+		}
 	}
 
 	database := pgstore.InitDB()
@@ -86,7 +89,7 @@ func initLogger() *logrus.Logger {
 
 func runMigrations(databaseURL string, log *logrus.Logger) {
 	m, err := migrate.New(
-		"file://../internal/store/pgstore/migrations",
+		"file://./internal/store/pgstore/migrations",
 		databaseURL)
 	if err != nil {
 		log.WithFields(logrus.Fields{
