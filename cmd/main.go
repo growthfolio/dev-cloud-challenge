@@ -72,12 +72,17 @@ func main() {
 
 	router.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
 
-	log.Info("Servidor rodando na porta 8080")
-	if err := http.ListenAndServe(":8080", router); err != nil {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080" // Default fallback
+	}
+	log.Info("Servidor rodando na porta " + port)
+	if err := http.ListenAndServe(":"+port, router); err != nil {
 		log.WithFields(logrus.Fields{
 			"error": err,
 		}).Fatal("Erro ao iniciar o servidor HTTP")
 	}
+
 }
 
 func initLogger() *logrus.Logger {
