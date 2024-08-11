@@ -63,12 +63,18 @@ func main() {
 
 	router := mux.NewRouter()
 
+	// Redireciona a rota raiz para o Swagger
+	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, "/swagger/", http.StatusMovedPermanently)
+	}).Methods("GET")
+
 	router.HandleFunc("/alunos", alunoHandler.GetAlunos).Methods("GET")
 	router.HandleFunc("/alunos", alunoHandler.CreateAluno).Methods("POST")
 	router.HandleFunc("/alunos/{id}", alunoHandler.GetAluno).Methods("GET")
 	router.HandleFunc("/alunos/{id}", alunoHandler.UpdateAluno).Methods("PUT")
 	router.HandleFunc("/alunos/{id}", alunoHandler.DeleteAluno).Methods("DELETE")
 
+	// Rota do Swagger
 	router.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
 
 	port := os.Getenv("PORT")
