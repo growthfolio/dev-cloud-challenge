@@ -4,7 +4,8 @@ import (
 	"net/http"
 	"os"
 
-	_ "github.com/FelipeAJdev/dev-cloud-challenge/docs" // Importa os documentos gerados pelo swagger
+	_ "github.com/FelipeAJdev/dev-cloud-challenge/docs"    // Importa os documentos gerados pelo swagger
+	docs "github.com/FelipeAJdev/dev-cloud-challenge/docs" // Ajuste: Importa o pacote de documentação gerada
 	"github.com/FelipeAJdev/dev-cloud-challenge/internal/handlers"
 	"github.com/FelipeAJdev/dev-cloud-challenge/internal/repository"
 	"github.com/FelipeAJdev/dev-cloud-challenge/internal/services"
@@ -25,7 +26,6 @@ import (
 // @contact.name Felipe Macedo
 // @contact.email felipealexandrej@gmail.com
 
-// @host localhost:8080
 // @BasePath /
 // @schemes http
 func main() {
@@ -38,6 +38,13 @@ func main() {
 			log.Fatalf("Erro ao carregar arquivo .env: %v", err)
 		}
 	}
+
+	// Configura o host dinamicamente para o Swagger
+	host := os.Getenv("HOST")
+	if host == "" {
+		host = "localhost:8080" // Valor padrão para desenvolvimento
+	}
+	docs.SwaggerInfo.Host = host // Ajuste: Configura o host para o Swagger
 
 	database := pgstore.InitDB()
 	defer func() {
@@ -87,7 +94,6 @@ func main() {
 			"error": err,
 		}).Fatal("Erro ao iniciar o servidor HTTP")
 	}
-
 }
 
 func initLogger() *logrus.Logger {
