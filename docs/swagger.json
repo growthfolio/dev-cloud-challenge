@@ -12,7 +12,7 @@
         },
         "version": "1.0"
     },
-    "host": "localhost:8080",
+    "host": "dev-cloud-challenge.herokuapp.com",
     "basePath": "/",
     "paths": {
         "/alunos": {
