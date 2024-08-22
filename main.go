@@ -5,7 +5,6 @@ import (
 	"os"
 
 	_ "github.com/FelipeAJdev/dev-cloud-challenge/docs" // Importa os documentos gerados pelo swagger
-	// Ajuste: Importa o pacote de documentação gerada
 	"github.com/FelipeAJdev/dev-cloud-challenge/internal/handlers"
 	"github.com/FelipeAJdev/dev-cloud-challenge/internal/repository"
 	"github.com/FelipeAJdev/dev-cloud-challenge/internal/services"
