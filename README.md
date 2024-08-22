@@ -1,8 +1,12 @@
+<div align="center">
+   
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=FelipeAJdev_dev-cloud-challenge&metric=alert_status)](https://sonarcloud.io/dashboard?id=FelipeAJdev_dev-cloud-challenge)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=FelipeAJdev_dev-cloud-challenge&metric=bugs)](https://sonarcloud.io/dashboard?id=FelipeAJdev_dev-cloud-challenge)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=FelipeAJdev_dev-cloud-challenge&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=FelipeAJdev_dev-cloud-challenge)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=FelipeAJdev_dev-cloud-challenge&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=FelipeAJdev_dev-cloud-challenge)
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=FelipeAJdev_dev-cloud-challenge&metric=sqale_index)](https://sonarcloud.io/dashboard?id=FelipeAJdev_dev-cloud-challenge)
+
+</div>
 
 # Dev Cloud Challenge
 
