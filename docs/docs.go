@@ -4,91 +4,96 @@ package docs
 import "github.com/swaggo/swag"
 
 const docTemplate = `{
-    "schemes": {{ marshal .Schemes }},
     "swagger": "2.0",
     "info": {
-        "description": "{{escape .Description}}",
-        "title": "{{.Title}}",
+        "description": "Esta é a documentação da API de Gestão de Alunos, que permite gerenciar as informações dos alunos, incluindo criação, atualização, consulta e exclusão de registros.\n\n",
+        "title": "API de Gestão de Alunos",
         "contact": {
-            "name": "Felipe Macedo",
-            "email": "felipealexandrej@gmail.com"
+            "name": "Follow me on Github",
+            "url": "https://github.com/FelipeAJdev"
         },
-        "version": "{{.Version}}"
+        "version": "2.0",
+        "license": {
+            "name": "Linkedin - Felipe Macedo",
+            "url": "https://www.linkedin.com/in/felipemacedo1/"
+        }
     },
-    "host": "{{.Host}}",
-    "basePath": "{{.BasePath}}",
+    "host": "dev-cloud-challenge-b3f5485f2dcf.herokuapp.com",
+    "basePath": "/",
+    "schemes": [
+        "https"
+    ],
     "paths": {
         "/alunos": {
             "get": {
-                "description": "Obtém a lista de TODOS os alunos cadastrados no sistema",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
                 "tags": [
                     "Alunos"
                 ],
                 "summary": "Retorna a lista de alunos",
+                "description": "Obtém a lista de TODOS os alunos cadastrados no sistema",
+                "operationId": "getAlunos",
+                "produces": [
+                    "application/json"
+                ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Lista de alunos retornada com sucesso",
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.Aluno"
+                                "$ref": "#/definitions/Aluno"
                             }
                         }
                     },
                     "500": {
                         "description": "Erro interno no servidor",
                         "schema": {
-                            "$ref": "#/definitions/models.ErrorResponse"
+                            "$ref": "#/definitions/ErrorResponse"
                         }
                     }
                 }
             },
             "post": {
+                "tags": [
+                    "Alunos"
+                ],
+                "summary": "Cria um novo aluno",
                 "description": "Adiciona um novo aluno ao sistema",
+                "operationId": "addAluno",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "tags": [
-                    "Alunos"
-                ],
-                "summary": "Cria um novo aluno",
                 "parameters": [
                     {
-                        "description": "Dados do Aluno",
                         "name": "aluno",
                         "in": "body",
+                        "description": "Dados do Aluno",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Aluno"
+                            "$ref": "#/definitions/Aluno"
                         }
                     }
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created",
+                        "description": "Aluno criado com sucesso",
                         "schema": {
-                            "$ref": "#/definitions/models.Aluno"
+                            "$ref": "#/definitions/Aluno"
                         }
                     },
                     "400": {
                         "description": "Dados do aluno inválidos",
                         "schema": {
-                            "$ref": "#/definitions/models.ErrorResponse"
+                            "$ref": "#/definitions/ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Erro interno no servidor",
                         "schema": {
-                            "$ref": "#/definitions/models.ErrorResponse"
+                            "$ref": "#/definitions/ErrorResponse"
                         }
                     }
                 }
@@ -96,145 +101,139 @@ const docTemplate = `{
         },
         "/alunos/{id}": {
             "get": {
-                "description": "Obtém os dados de um aluno específico pelo ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
                 "tags": [
                     "Alunos"
                 ],
                 "summary": "Retorna um aluno pelo ID",
+                "description": "Obtém os dados de um aluno específico pelo ID",
+                "operationId": "getAlunoById",
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "ID do Aluno",
                         "name": "id",
                         "in": "path",
-                        "required": true
+                        "description": "ID do Aluno",
+                        "required": true,
+                        "type": "integer"
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Dados do Aluno",
+                        "description": "Dados do Aluno retornados com sucesso",
                         "schema": {
-                            "$ref": "#/definitions/models.Aluno"
+                            "$ref": "#/definitions/Aluno"
                         }
                     },
                     "400": {
                         "description": "ID inválido",
                         "schema": {
-                            "$ref": "#/definitions/models.ErrorResponse"
+                            "$ref": "#/definitions/ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Aluno não encontrado",
                         "schema": {
-                            "$ref": "#/definitions/models.ErrorResponse"
+                            "$ref": "#/definitions/ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Erro interno no servidor",
                         "schema": {
-                            "$ref": "#/definitions/models.ErrorResponse"
+                            "$ref": "#/definitions/ErrorResponse"
                         }
                     }
                 }
             },
             "put": {
+                "tags": [
+                    "Alunos"
+                ],
+                "summary": "Atualiza os dados de um aluno",
                 "description": "Atualiza as informações de um aluno específico pelo ID",
+                "operationId": "updateAluno",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "tags": [
-                    "Alunos"
-                ],
-                "summary": "Atualiza os dados de um aluno",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "ID do Aluno",
                         "name": "id",
                         "in": "path",
-                        "required": true
+                        "description": "ID do Aluno",
+                        "required": true,
+                        "type": "integer"
                     },
                     {
-                        "description": "Dados do Aluno",
                         "name": "aluno",
                         "in": "body",
+                        "description": "Dados do Aluno a serem atualizados",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Aluno"
+                            "$ref": "#/definitions/Aluno"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Aluno atualizado com sucesso",
                         "schema": {
-                            "$ref": "#/definitions/models.Aluno"
+                            "$ref": "#/definitions/Aluno"
                         }
                     },
                     "400": {
                         "description": "Dados inválidos ou ID inválido",
                         "schema": {
-                            "$ref": "#/definitions/models.ErrorResponse"
+                            "$ref": "#/definitions/ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Aluno não encontrado",
                         "schema": {
-                            "$ref": "#/definitions/models.ErrorResponse"
+                            "$ref": "#/definitions/ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Erro interno no servidor",
                         "schema": {
-                            "$ref": "#/definitions/models.ErrorResponse"
+                            "$ref": "#/definitions/ErrorResponse"
                         }
                     }
                 }
             },
             "delete": {
-                "description": "Remove um aluno específico pelo ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
                 "tags": [
                     "Alunos"
                 ],
                 "summary": "Deleta um aluno pelo ID",
+                "description": "Remove um aluno específico pelo ID",
+                "operationId": "deleteAluno",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "ID do Aluno",
                         "name": "id",
                         "in": "path",
-                        "required": true
+                        "description": "ID do Aluno",
+                        "required": true,
+                        "type": "integer"
                     }
                 ],
                 "responses": {
                     "204": {
-                        "description": "No Content"
+                        "description": "Aluno deletado com sucesso"
                     },
                     "404": {
                         "description": "Aluno não encontrado",
                         "schema": {
-                            "$ref": "#/definitions/models.ErrorResponse"
+                            "$ref": "#/definitions/ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Erro interno no servidor",
                         "schema": {
-                            "$ref": "#/definitions/models.ErrorResponse"
+                            "$ref": "#/definitions/ErrorResponse"
                         }
                     }
                 }
@@ -242,17 +241,17 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "models.Aluno": {
+        "Aluno": {
             "type": "object",
             "properties": {
                 "id": {
                     "type": "integer"
                 },
-                "idade": {
-                    "type": "integer"
-                },
                 "nome": {
                     "type": "string"
+                },
+                "idade": {
+                    "type": "integer"
                 },
                 "nome_professor": {
                     "type": "string"
@@ -268,7 +267,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.ErrorResponse": {
+        "ErrorResponse": {
             "type": "object",
             "properties": {
                 "code": {
@@ -284,12 +283,12 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "2.0",
-	Host:             "",
+	Version:          "3.0",
+	Host:             "dev-cloud-challenge-b3f5485f2dcf.herokuapp.com",
 	BasePath:         "/",
 	Schemes:          []string{"https"},
 	Title:            "API de Gestão de Alunos",
-    Description:      "Esta é a documentação da API de Gestão de Alunos.\n\n[LinkedIn](https://www.linkedin.com/in/felipemacedo1/)\n[GitHub](https://github.com/FelipeAJdev/)",
+    Description:      "Esta é a documentação da API de Gestão de Alunos, que permite gerenciar as informações dos alunos, incluindo criação, atualização, consulta e exclusão de registros.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",
