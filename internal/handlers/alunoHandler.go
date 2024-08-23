@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/FelipeAJdev/dev-cloud-challenge/internal/models"
-	"github.com/FelipeAJdev/dev-cloud-challenge/internal/services"
+	"github.com/felipemacedo1/dev-cloud-challenge/internal/models"
+	"github.com/felipemacedo1/dev-cloud-challenge/internal/services"
 
 	"github.com/gorilla/mux"
 	logrus "github.com/sirupsen/logrus"

@@ -4,11 +4,11 @@ import (
 	"net/http"
 	"os"
 
-	_ "github.com/FelipeAJdev/dev-cloud-challenge/docs" // Importa os documentos gerados pelo swagger
-	"github.com/FelipeAJdev/dev-cloud-challenge/internal/handlers"
-	"github.com/FelipeAJdev/dev-cloud-challenge/internal/repository"
-	"github.com/FelipeAJdev/dev-cloud-challenge/internal/services"
-	"github.com/FelipeAJdev/dev-cloud-challenge/internal/store/pgstore"
+	_ "github.com/felipemacedo1/dev-cloud-challenge/docs" // Importa os documentos gerados pelo swagger
+	"github.com/felipemacedo1/dev-cloud-challenge/internal/handlers"
+	"github.com/felipemacedo1/dev-cloud-challenge/internal/repository"
+	"github.com/felipemacedo1/dev-cloud-challenge/internal/services"
+	"github.com/felipemacedo1/dev-cloud-challenge/internal/store/pgstore"
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"

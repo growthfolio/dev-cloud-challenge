@@ -10,7 +10,7 @@ const docTemplate = `{
         "title": "API de Gestão de Alunos",
         "contact": {
             "name": "Follow me on Github",
-            "url": "https://github.com/FelipeAJdev"
+            "url": "https://github.com/felipemacedo1"
         },
         "version": "2.0",
         "license": {

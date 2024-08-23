@@ -1,8 +1,8 @@
 package services
 
 import (
-	"github.com/FelipeAJdev/dev-cloud-challenge/internal/models"
-	"github.com/FelipeAJdev/dev-cloud-challenge/internal/repository"
+	"github.com/felipemacedo1/dev-cloud-challenge/internal/models"
+	"github.com/felipemacedo1/dev-cloud-challenge/internal/repository"
 )
 
 type AlunoService interface {

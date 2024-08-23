@@ -1,4 +1,4 @@
-module github.com/FelipeAJdev/dev-cloud-challenge
+module github.com/felipemacedo1/dev-cloud-challenge
 
 go 1.22.5
 
