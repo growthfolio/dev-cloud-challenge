@@ -3,7 +3,7 @@ package repository
 import (
 	"database/sql"
 
-	"github.com/FelipeAJdev/dev-cloud-challenge/internal/models"
+	"github.com/felipemacedo1/dev-cloud-challenge/internal/models"
 )
 
 type AlunoRepository interface {

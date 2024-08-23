@@ -47,7 +47,7 @@ The project includes a `docker-compose.yml` file that sets up the following serv
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/FelipeAJdev/dev-cloud-challenge.git
+   git clone https://github.com/felipemacedo1/dev-cloud-challenge.git
    cd dev-cloud-challenge
    ```
 
