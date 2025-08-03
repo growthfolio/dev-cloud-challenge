@@ -1,102 +1,156 @@
-<div align="center">
-   
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=FelipeAJdev_dev-cloud-challenge&metric=alert_status)](https://sonarcloud.io/dashboard?id=FelipeAJdev_dev-cloud-challenge)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=FelipeAJdev_dev-cloud-challenge&metric=bugs)](https://sonarcloud.io/dashboard?id=FelipeAJdev_dev-cloud-challenge)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=FelipeAJdev_dev-cloud-challenge&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=FelipeAJdev_dev-cloud-challenge)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=FelipeAJdev_dev-cloud-challenge&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=FelipeAJdev_dev-cloud-challenge)
-[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=FelipeAJdev_dev-cloud-challenge&metric=sqale_index)](https://sonarcloud.io/dashboard?id=FelipeAJdev_dev-cloud-challenge)
+# ☁️ Dev Cloud Challenge - API REST em Go
 
-</div>
+## 🎯 Objetivo de Aprendizado
+API RESTful desenvolvida em Go como desafio de **Desenvolvimento Web e Cloud**. Implementa **CRUD completo** para gestão de dados estudantis com **PostgreSQL**, **Docker** e **CI/CD**, aplicando boas práticas de desenvolvimento e deploy em nuvem.
 
-# Dev Cloud Challenge
+## 🛠️ Tecnologias Utilizadas
+- **Linguagem:** Go
+- **Banco de dados:** PostgreSQL
+- **Containerização:** Docker, Docker Compose
+- **Administração:** pgAdmin
+- **CI/CD:** GitHub Actions
+- **Deploy:** Heroku
+- **Documentação:** Swagger UI
+- **Qualidade:** SonarCloud
 
-This project is a RESTful API developed in Go as part of a challenge for a Web Development and Cloud course. The main goal of this project is to implement a CRUD (Create, Read, Update, Delete) application for managing student data within a school, utilizing PostgreSQL for data persistence.
+## 🚀 Demonstração
+```bash
+# Endpoints principais
+GET    /students           # Listar todos os estudantes
+POST   /students           # Criar novo estudante
+PUT    /students/{id}      # Atualizar estudante
+DELETE /students/{id}      # Remover estudante
 
-## Features
+# Swagger Documentation
+https://dev-cloud-challenge-b3f5485f2dcf.herokuapp.com/swagger/index.html
+```
 
-- **CRUD Operations**: Manage student data with create, read, update, and delete operations.
-- **RESTful API**: Follows REST principles, making it easy to integrate with other systems.
-- **Database Integration**: Uses PostgreSQL for storing and managing data.
-- **Database Migrations**: Automatically applies database migrations to set up the schema.
-- **Containerization**: The project includes Docker configurations for easy deployment and testing.
-- **Database Management**: Includes pgAdmin for managing the PostgreSQL database through a web interface.
+## 📁 Estrutura do Projeto
+```
+dev-cloud-challenge/
+├── cmd/
+│   └── main.go                # Entry point da aplicação
+├── internal/
+│   ├── handlers/              # HTTP handlers
+│   ├── models/                # Data models
+│   ├── repository/            # Data access layer
+│   └── services/              # Business logic
+├── docs/                      # Swagger documentation
+├── bin/                       # Compiled binaries
+├── docker-compose.yml         # Orquestração de serviços
+├── Dockerfile                 # Container configuration
+└── .github/workflows/         # CI/CD pipelines
+```
 
-## Technologies Used
+## 💡 Principais Aprendizados
 
-- **Go**: The programming language used to develop the application.
-- **PostgreSQL**: Database used for data persistence.
-- **Docker**: Used for containerization and easy setup of the development environment.
-- **GitHub Actions**: Set up for CI/CD to automate the testing and deployment processes.
+### 🌐 API RESTful Design
+- **HTTP methods:** GET, POST, PUT, DELETE apropriados
+- **Status codes:** Códigos de resposta semânticos
+- **JSON handling:** Serialização e deserialização
+- **Error handling:** Tratamento consistente de erros
+- **Middleware:** Logging, CORS, authentication
 
-## How to Run the Project
+### 🐘 PostgreSQL Integration
+- **Database migrations:** Versionamento de schema
+- **Connection pooling:** Gerenciamento eficiente de conexões
+- **Query optimization:** Consultas performáticas
+- **Transaction management:** Consistência de dados
+- **Environment configuration:** Configuração flexível
 
-### Prerequisites
+### 🐳 Containerização e Deploy
+- **Docker multi-stage:** Builds otimizados
+- **Docker Compose:** Orquestração local
+- **Environment variables:** Configuração externa
+- **Health checks:** Monitoramento de saúde
+- **Cloud deployment:** Deploy automatizado
 
-- **Go 1.19 or higher**
-- **Docker** (if using the Docker setup)
-- **PostgreSQL** (if running the database locally)
+## 🧠 Conceitos Técnicos Estudados
 
-### Docker Compose Setup
+### 1. **Clean API Architecture**
+```go
+// Handler layer
+func (h *StudentHandler) CreateStudent(w http.ResponseWriter, r *http.Request) {
+    var student models.Student
+    if err := json.NewDecoder(r.Body).Decode(&student); err != nil {
+        http.Error(w, "Invalid JSON", http.StatusBadRequest)
+        return
+    }
+    
+    result, err := h.service.CreateStudent(student)
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
+    
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(result)
+}
+```
 
-The project includes a `docker-compose.yml` file that sets up the following services:
+### 2. **Database Layer**
+```go
+// Repository pattern
+type StudentRepository interface {
+    Create(student *Student) error
+    GetByID(id int) (*Student, error)
+    GetAll() ([]*Student, error)
+    Update(student *Student) error
+    Delete(id int) error
+}
 
-- **PostgreSQL**: A PostgreSQL database server.
-- **pgAdmin**: A web-based database management tool for PostgreSQL.
+type postgresStudentRepo struct {
+    db *sql.DB
+}
+```
 
-#### Steps to Run
+### 3. **Docker Configuration**
+```dockerfile
+# Multi-stage build
+FROM golang:1.19-alpine AS builder
+WORKDIR /app
+COPY . .
+RUN go mod download
+RUN go build -o main cmd/main.go
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/felipemacedo1/dev-cloud-challenge.git
-   cd dev-cloud-challenge
-   ```
+FROM alpine:latest
+RUN apk --no-cache add ca-certificates
+WORKDIR /root/
+COPY --from=builder /app/main .
+CMD ["./main"]
+```
 
-2. **Set up the environment**:
-   - Ensure the environment variables for the database are configured in a `.env` file:
-     ```
-     WSRS_DATABASE_PORT=5432
-     WSRS_DATABASE_USER=postgres
-     WSRS_DATABASE_PASSWORD=yourpassword
-     WSRS_DATABASE_NAME=wsrs
-     ```
+## 🚧 Desafios Enfrentados
+1. **Database connectivity:** Configuração de conexão PostgreSQL
+2. **Environment management:** Variáveis de ambiente em diferentes ambientes
+3. **CORS handling:** Configuração para frontend integration
+4. **Error consistency:** Padronização de respostas de erro
+5. **Performance optimization:** Otimização de queries e conexões
 
-3. **Run the services using Docker Compose**:
-   ```bash
-   docker-compose up
-   ```
+## 📚 Recursos Utilizados
+- [Go Web Programming](https://www.manning.com/books/go-web-programming)
+- [PostgreSQL Documentation](https://www.postgresql.org/docs/)
+- [Docker Best Practices](https://docs.docker.com/develop/best-practices/)
+- [REST API Design Guidelines](https://restfulapi.net/)
 
-   - This will start both the PostgreSQL database and the pgAdmin interface. pgAdmin will be accessible at `http://localhost:8081` with the default credentials provided in the `docker-compose.yml` file.
+## 📈 Próximos Passos
+- [ ] Implementar autenticação JWT
+- [ ] Adicionar rate limiting
+- [ ] Implementar caching com Redis
+- [ ] Adicionar métricas e monitoring
+- [ ] Implementar testes de integração
+- [ ] Adicionar validação de dados avançada
 
-4. **Apply Database Migrations**:
-   - Ensure that the migrations are automatically applied when the application starts. If needed, you can run the migrations manually using the tool or method defined in your Go application.
+## 🔗 Projetos Relacionados
+- [Go PriceGuard API](../go-priceguard-api/) - API Go com Clean Architecture
+- [Go Antifraud MS](../go-antifraud-ms/) - Microserviço Go avançado
+- [Spring Blog Platform](../spring-blog-platform/) - API similar em Java
 
-5. **Run the application**:
-   ```bash
-   go run main.go
-   ```
+---
 
-6. **Access the API**:
-   - The API will be available at `http://localhost:8080`.
+**Desenvolvido por:** Felipe Macedo  
+**Contato:** contato.dev.macedo@gmail.com  
+**GitHub:** [FelipeMacedo](https://github.com/felipemacedo1)  
+**LinkedIn:** [felipemacedo1](https://linkedin.com/in/felipemacedo1)
 
-## Endpoints
-
-### Students
-
-- **GET /students**: Retrieve all students.
-- **POST /students**: Create a new student record.
-- **PUT /students/{id}**: Update an existing student record.
-- **DELETE /students/{id}**: Delete a student record.
-
-## Documentation
-
-The API documentation, including the Swagger UI, is available at the following link:
-
-[Swagger Documentation](https://dev-cloud-challenge-b3f5485f2dcf.herokuapp.com/swagger/index.html)
-
-## Contribution
-
-Feel free to fork the repository, submit issues, and open pull requests. Contributions are welcome!<!--
-## License
-
-This project is open-source and available under the [MIT License](LICENSE).
--->
+> 💡 **Reflexão:** Este projeto consolidou conhecimentos em desenvolvimento de APIs REST e deploy em nuvem. A experiência com Docker e CI/CD foi fundamental para compreender o ciclo completo de desenvolvimento moderno.
